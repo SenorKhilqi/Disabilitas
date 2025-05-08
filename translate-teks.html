@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Translate Teks/Audio ke Gerakan - Diajar</title>
+    <style>
+        :root {
+            --primary-color: #c8a97e; /* Main cream color */
+            --secondary-color: #8c7051; /* Darker cream */
+            --accent-color: #e6d7b8; /* Light cream */
+            --text-color: #4a3c2a; /* Dark brown text */
+            --light-color: #f7f3e9; /* Very light cream background */
+            --dark-color: #3c3024; /* Very dark brown */
+            --white-color: #ffffff;
+            --gray-color: #e9e9e9;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+
+        /* Accessibility Improvements */
+        :focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 3px;
+        }
+
+        /* Skip to content link for keyboard users */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--secondary-color);
+            color: var(--white-color);
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header and Navigation */
+        .header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a:focus {
+            color: var(--secondary-color);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a:focus::after {
+            width: 100%;
+        }
+
+        /* Main content */
+        main {
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--accent-color) 100%);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Translator Content */
+        .translator-content {
+            padding: 4rem 0;
+        }
+
+        .translator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .translator-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        /* Input Options */
+        .input-options {
+            margin-bottom: 1.5rem;
+        }
+
+        .option-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .option-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .option-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .option-tab:hover,
+        .option-tab:focus {
+            color: var(--secondary-color);
+        }
+
+        .option-tab.active {
+            color: var(--primary-color);
+        }
+
+        .option-tab.active::after {
+            width: 100%;
+        }
+
+        .input-content {
+            display: none;
+        }
+
+        .input-content.active {
+            display: block;
+        }
+
+        /* Text Input */
+        .text-input {
+            width: 100%;
+            height: 150px;
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color var(--transition-speed);
+        }
+
+        .text-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Audio Input */
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white-color);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover,
+        .btn-outline:focus {
+            background: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .btn-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            padding: 0;
+        }
+
+        .recording-indicator {
+            color: #d15b5b;
+            font-weight: 500;
+            animation: blink 1s infinite;
+            display: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .audio-waveform {
+            width: 100%;
+            height: 100px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Translation Options */
+        .translation-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .language-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+            transition: border-color var(--transition-speed);
+        }
+
+        .language-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Translation Result */
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .result-canvas {
+            width: 100%;
+            height: 400px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .result-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .controls-left, .controls-right {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Word Translation Boxes */
+        .words-container {
+            margin-top: 2rem;
+        }
+
+        .words-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .word-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .word-box {
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            padding: 1rem;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .word-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .word-image {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .word-text {
+            font-weight: 500;
+        }
+
+        /* Recent Translations */
+        .recent-translations {
+            margin-top: 2rem;
+        }
+
+        .recent-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .translation-list {
+            list-style: none;
+        }
+
+        .translation-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--accent-color);
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .translation-item:hover {
+            background-color: var(--accent-color);
+        }
+
+        .translation-item:last-child {
+            border-bottom: none;
+        }
+
+        .translation-text {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .translation-meta {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feedback-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-option {
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .feedback-option:hover,
+        .feedback-option:focus {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-input {
+            width: 100%;
+            height: 100px;
+            padding: 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 1rem;
+            transition: border-color var(--transition-speed);
+        }
+
+        .feedback-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--white-color);
+                width: 100%;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                transition: left var(--transition-speed);
+                padding: 1rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .translator-section,
+            .feedback-section {
+                padding: 1rem;
+            }
+
+            .option-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .option-tab {
+                padding: 0.75rem 1rem;
+            }
+
+            .word-boxes {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Langsung ke konten</a>
+    
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="Diajar homepage">Diajar</a>
+                <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span>&#9776;</span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="translate-gerakan.html">Translate Gerakan ke Teks & Audio</a></li>
+                    <li><a href="translate-teks.html" aria-current="page">Translate Teks/Audio ke Gerakan</a></li>
+                    <li><a href="labillary.html">Labillary</a></li>
+                    <li><a href="game.html">Game</a></li>
+                    <li><a href="profil.html">Profil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Translate Teks/Audio ke Gerakan</h1>
+                <p class="page-description">Terjemahkan teks atau rekaman suara ke dalam bahasa isyarat dengan mudah dan akurat.</p>
+            </div>
+        </section>
+
+        <section class="translator-content">
+            <div class="container">
+                <div class="translator-container">
+                    <div class="translator-section">
+                        <h2 class="section-title">Input</h2>
+                        
+                        <div class="input-options">
+                            <div class="option-tabs">
+                                <button class="option-tab active" data-tab="text">Teks</button>
+                                <button class="option-tab" data-tab="audio">Audio</button>
+                            </div>
+                            
+                            <div class="input-content active" id="text">
+                                <textarea class="text-input" placeholder="Tulis teks yang ingin diterjemahkan ke bahasa isyarat..." aria-label="Teks untuk diterjemahkan"></textarea>
+                            </div>
+                            
+                            <div class="input-content" id="audio">
+                                <div class="audio-controls">
+                                    <button class="btn btn-icon" id="record-btn" aria-label="Mulai merekam">🎤</button>
+                                    <span class="recording-indicator">Merekam...</span>
+                                </div>
+                                <div class="audio-waveform" id="waveform">
+                                    Klik mikrofon untuk mulai merekam
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="translation-options">
+                            <select class="language-select" aria-label="Pilih bahasa isyarat">
+                                <option value="sibi">SIBI (Sistem Isyarat Bahasa Indonesia)</option>
+                                <option value="bisindo">BISINDO (Bahasa Isyarat Indonesia)</option>
+                                <option value="asl">ASL (American Sign Language)</option>
+                            </select>
+                            
+                            <button class="btn" id="translate-btn">Terjemahkan</button>
+                        </div>
+                        
+                        <div class="recent-translations">
+                            <h3 class="recent-title">Terjemahan Terakhir</h3>
+                            <ul class="translation-list">
+                                <li class="translation-item">
+                                    <div class="translation-text">Selamat pagi, apa kabar?</div>
+                                    <div class="translation-meta">5 menit yang lalu</div>
+                                </li>
+                                <li class="translation-item">
+                                    <div class="translation-text">Senang berkenalan dengan Anda</div>
+                                    <div class="translation-meta">10 menit yang lalu</div>
+                                </li>
+                                <li class="translation-item">
+                                    <div class="translation-text">Terima kasih atas bantuannya</div>
+                                    <div class="translation-meta">30 menit yang lalu</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="translator-section result-section">
+                        <h2 class="section-title">Hasil Terjemahan</h2>
+                        
+                        <div class="result-canvas" id="result-canvas">
+                            Hasil terjemahan akan muncul di sini
+                        </div>
+                        
+                        <div class="result-controls">
+                            <div class="controls-left">
+                                <button class="btn btn-outline btn-icon" id="play-btn" aria-label="Putar animasi">▶️</button>
+                                <button class="btn btn-outline btn-icon" id="pause-btn" aria-label="Jeda animasi">⏸️</button>
+                                <button class="btn btn-outline btn-icon" id="restart-btn" aria-label="Ulang animasi">🔄</button>
+                            </div>
+                            
+                            <div class="controls-right">
+                                <button class="btn btn-outline" id="save-btn">Simpan</button>
+                                <button class="btn btn-outline" id="share-btn">Bagikan</button>
+                            </div>
+                        </div>
+                        
+                        <div class="words-container">
+                            <h3 class="words-title">Terjemahan Per Kata</h3>
+                            <div class="word-boxes">
+                                <div class="word-box">
+                                    <div class="word-image">👋</div>
+                                    <div class="word-text">Halo</div>
+                                </div>
+                                <div class="word-box">
+                                    <div class="word-image">❓</div>
+                                    <div class="word-text">Apa</div>
+                                </div>
+                                <div class="word-box">
+                                    <div class="word-image">🙂</div>
+                                    <div class="word-text">Kabar</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <h2 class="section-title">Feedback Terjemahan</h2>
+                    <div class="feedback-options">
+                        <button class="feedback-option">Terjemahan Akurat</button>
+                        <button class="feedback-option">Gerakan Kurang Jelas</button>
+                        <button class="feedback-option">Ada Kata yang Salah</button>
+                        <button class="feedback-option">Lainnya</button>
+                    </div>
+                    <textarea class="feedback-input" placeholder="Berikan masukan spesifik untuk meningkatkan kualitas terjemahan..." aria-label="Masukan untuk terjemahan"></textarea>
+                    <button class="btn" style="margin-top: 1rem;">Kirim Feedback</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Diajar</h3>
+                    <p>Platform komunikasi inklusif yang menjembatani kesenjangan komunikasi antara penyandang disabilitas dengan masyarakat umum.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: info@diajar.id</p>
+                    <p>Phone: (021) 1234-5678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="translate-gerakan.html">Translate Gerakan</a></p>
+                    <p><a href="translate-teks.html">Translate Teks</a></p>
+                    <p><a href="labillary.html">Labillary</a></p>
+                    <p><a href="game.html">Game</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Diajar. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle for mobile
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Sticky header effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Input tabs
+        const optionTabs = document.querySelectorAll('.option-tab');
+        const inputContents = document.querySelectorAll('.input-content');
+
+        optionTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                optionTabs.forEach(t => t.classList.remove('active'));
+                inputContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Audio recording simulation
+        const recordBtn = document.getElementById('record-btn');
+        const recordingIndicator = document.querySelector('.recording-indicator');
+        const waveform = document.getElementById('waveform');
+        let isRecording = false;
+
+        recordBtn.addEventListener('click', () => {
+            isRecording = !isRecording;
+            
+            if (isRecording) {
+                recordingIndicator.style.display = 'block';
+                waveform.innerHTML = 'Merekam suara...';
+                recordBtn.innerHTML = '⏹️';
+                recordBtn.setAttribute('aria-label', 'Hentikan merekam');
+            } else {
+                recordingIndicator.style.display = 'none';
+                waveform.innerHTML = 'Rekaman selesai, klik terjemahkan untuk memproses';
+                recordBtn.innerHTML = '🎤';
+                recordBtn.setAttribute('aria-label', 'Mulai merekam');
+            }
+        });
+
+        // Translation process simulation
+        const translateBtn = document.getElementById('translate-btn');
+        const resultCanvas = document.getElementById('result-canvas');
+        const textInput = document.querySelector('.text-input');
+        const wordBoxes = document.querySelector('.word-boxes');
+
+        translateBtn.addEventListener('click', () => {
+            // Show loading indicator
+            resultCanvas.innerHTML = 'Memproses terjemahan...';
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                const activeTab = document.querySelector('.option-tab.active').getAttribute('data-tab');
+                let inputText;
+                
+                if (activeTab === 'text' && textInput.value.trim()) {
+                    inputText = textInput.value.trim();
+                } else if (activeTab === 'audio') {
+                    inputText = "Halo, apa kabar?"; // Simulated audio transcription
+                } else {
+                    inputText = "Halo, apa kabar?"; // Default demo text
+                }
+                
+                // Display animation placeholder
+                resultCanvas.innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">👋</div>
+                        <div>Animasi terjemahan untuk: "${inputText}"</div>
+                    </div>
+                `;
+                
+                // Update word boxes based on input
+                updateWordBoxes(inputText);
+                
+                // Add to recent translations
+                addRecentTranslation(inputText);
+            }, 1500);
+        });
+
+        // Function to update word boxes
+        function updateWordBoxes(text) {
+            const words = text.split(/\s+/).filter(word => word.length > 0);
+            let boxesHTML = '';
+            
+            // For demo purposes, we'll create a box for each word
+            words.forEach(word => {
+                // Generate a random emoji for each word (for demo)
+                const emojis = ['👋', '❓', '🙂', '👍', '🤝', '👌', '✌️', '👏', '🙏', '🎓'];
+                const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                boxesHTML += `
+                    <div class="word-box">
+                        <div class="word-image">${randomEmoji}</div>
+                        <div class="word-text">${word}</div>
+                    </div>
+                `;
+            });
+            
+            wordBoxes.innerHTML = boxesHTML;
+        }
+
+        // Function to add recent translation
+        function addRecentTranslation(text) {
+            const translationList = document.querySelector('.translation-list');
+            const newItem = document.createElement('li');
+            newItem.className = 'translation-item';
+            newItem.innerHTML = `
+                <div class="translation-text">${text}</div>
+                <div class="translation-meta">Baru saja</div>
+            `;
+            
+            translationList.insertBefore(newItem, translationList.firstChild);
+            
+            // Limit to 3 items
+            if (translationList.children.length > 3) {
+                translationList.removeChild(translationList.lastChild);
+            }
+        }
+
+        // Result playback controls
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        playBtn.addEventListener('click', () => {
+            alert('Animasi dimulai');
+        });
+        
+        pauseBtn.addEventListener('click', () => {
+            alert('Animasi dijeda');
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            alert('Animasi diulang');
+        });
+
+        // Save and share buttons
+        const saveBtn = document.getElementById('save-btn');
+        const shareBtn = document.getElementById('share-btn');
+        
+        saveBtn.addEventListener('click', () => {
+            alert('Terjemahan disimpan ke akun Anda');
+        });
+        
+        shareBtn.addEventListener('click', () => {
+            alert('Opsi berbagi: Link, Facebook, WhatsApp, Email');
+        });
+
+        // Feedback options
+        const feedbackOptions = document.querySelectorAll('.feedback-option');
+        const feedbackInput = document.querySelector('.feedback-input');
+        
+        feedbackOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                feedbackOptions.forEach(opt => {
+                    opt.style.backgroundColor = '';
+                    opt.style.color = '';
+                });
+                
+                option.style.backgroundColor = 'var(--primary-color)';
+                option.style.color = 'var(--white-color)';
+                
+                if (option.textContent === 'Lainnya') {
+                    feedbackInput.focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

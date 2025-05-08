@@ -6,13 +6,12 @@
     <title>Diajar - Platform Komunikasi Inklusif</title>
     <style>
         :root {
-            --primary-color: #c8a97e; /* Main cream color */
-            --secondary-color: #8c7051; /* Darker cream */
-            --accent-color: #e6d7b8; /* Light cream */
-            --text-color: #4a3c2a; /* Dark brown text */
-            --light-color: #f7f3e9; /* Very light cream background */
-            --dark-color: #3c3024; /* Very dark brown */
-            --white-color: #ffffff;
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4cb5ab;
+            --text-color: #333;
+            --light-color: #f9f9f9;
+            --dark-color: #222;
             --transition-speed: 0.3s;
         }
 
@@ -31,7 +30,7 @@
 
         /* Accessibility Improvements */
         :focus {
-            outline: 3px solid var(--secondary-color);
+            outline: 3px solid var(--accent-color);
             outline-offset: 3px;
         }
 
@@ -40,8 +39,8 @@
             position: absolute;
             top: -40px;
             left: 0;
-            background: var(--secondary-color);
-            color: var(--white-color);
+            background: var(--accent-color);
+            color: white;
             padding: 8px;
             z-index: 1000;
             transition: top 0.3s;
@@ -122,13 +121,13 @@
             left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--primary-color);
+            background-color: var(--accent-color);
             transition: width var(--transition-speed);
         }
 
         .nav-menu a:hover,
         .nav-menu a:focus {
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .nav-menu a:hover::after,
@@ -141,117 +140,34 @@
             min-height: 100vh;
         }
 
-        /* Hero Section */
         .hero {
-            padding: 6rem 0 4rem;
-            background: linear-gradient(135deg, var(--light-color) 0%, var(--accent-color) 100%);
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
             text-align: center;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .hero p {
             font-size: 1.2rem;
             max-width: 600px;
             margin: 0 auto 2rem;
-            color: var(--text-color);
-        }
-
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background: var(--primary-color);
-            color: var(--white-color);
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: all var(--transition-speed);
-            cursor: pointer;
-        }
-
-        .btn:hover,
-        .btn:focus {
-            background: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-        }
-
-        .btn-outline:hover,
-        .btn-outline:focus {
-            background: var(--primary-color);
-            color: var(--white-color);
-        }
-
-        .hero-nav {
-            margin-top: 3rem;
-        }
-
-        .hero-nav-list {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .hero-nav-item a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: transform var(--transition-speed);
-            font-weight: 500;
-        }
-
-        .hero-nav-item a:hover,
-        .hero-nav-item a:focus {
-            transform: translateY(-5px);
-            color: var(--secondary-color);
-        }
-
-        .hero-nav-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
         }
 
         /* Features Section */
         .features {
             padding: 4rem 0;
-            background-color: var(--white-color);
         }
 
         .section-title {
             text-align: center;
             margin-bottom: 3rem;
             font-size: 2rem;
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         .features-container {
@@ -261,16 +177,15 @@
         }
 
         .feature-card {
-            background: var(--light-color);
+            background: white;
             border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 2rem;
             transition: transform var(--transition-speed);
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
         }
 
         .feature-card h3 {
@@ -280,14 +195,14 @@
 
         .feature-icon {
             font-size: 2.5rem;
-            color: var(--primary-color);
+            color: var(--accent-color);
             margin-bottom: 1rem;
         }
 
         /* Footer */
         footer {
             background-color: var(--dark-color);
-            color: var(--light-color);
+            color: white;
             padding: 2rem 0;
             margin-top: 2rem;
         }
@@ -309,17 +224,6 @@
             color: var(--accent-color);
         }
 
-        .footer-section a {
-            color: var(--accent-color);
-            text-decoration: none;
-            transition: color var(--transition-speed);
-        }
-
-        .footer-section a:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
-        }
-
         .footer-bottom {
             text-align: center;
             padding-top: 1rem;
@@ -338,7 +242,7 @@
                 top: 70px;
                 left: -100%;
                 flex-direction: column;
-                background-color: var(--white-color);
+                background-color: white;
                 width: 100%;
                 box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
                 transition: left var(--transition-speed);
@@ -361,14 +265,6 @@
             .hero p {
                 font-size: 1rem;
             }
-
-            .hero-nav-list {
-                gap: 1rem;
-            }
-
-            .hero-nav-item a {
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
@@ -378,75 +274,31 @@
     <header class="header" id="header">
         <div class="container">
             <nav class="navbar">
-                <a href="index.html" class="logo" aria-label="Diajar homepage">Diajar</a>
+                <a href="#" class="logo" aria-label="Diajar homepage">Diajar</a>
                 <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
                     <span>&#9776;</span>
                 </button>
                 <ul class="nav-menu">
-                    <li><a href="index.html" aria-current="page">Home</a></li>
-                    <li><a href="translate-gerakan.html">Translate Gerakan ke Teks & Audio</a></li>
-                    <li><a href="translate-teks.html">Translate Teks/Audio ke Gerakan</a></li>
-                    <li><a href="labillary.html">Labillary</a></li>
-                    <li><a href="game.html">Game</a></li>
-                    <li><a href="profil.html">Profil</a></li>
+                    <li><a href="#" aria-current="page">Home</a></li>
+                    <li><a href="#">Translate Gerakan ke Teks & Audio</a></li>
+                    <li><a href="#">Translate Teks/Audio ke Gerakan</a></li>
+                    <li><a href="#">Labillary</a></li>
+                    <li><a href="#">Game</a></li>
+                    <li><a href="#">Profil</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main id="main-content">
-        <!-- Hero Section with Navigation -->
         <section class="hero">
             <div class="container">
-                <div class="hero-content">
-                    <h1>Platform Komunikasi Inklusif untuk Semua</h1>
-                    <p>Memudahkan komunikasi antara penyandang disabilitas dan masyarakat umum melalui teknologi penerjemahan yang inovatif.</p>
-                    
-                    <div class="hero-buttons">
-                        <a href="#features" class="btn">Jelajahi Fitur</a>
-                        <a href="#" class="btn btn-outline">Pelajari Lebih Lanjut</a>
-                    </div>
-                </div>
-
-                <!-- Hero Navigation -->
-                <div class="hero-nav">
-                    <ul class="hero-nav-list">
-                        <li class="hero-nav-item">
-                            <a href="translate-gerakan.html">
-                                <div class="hero-nav-icon">🖐️</div>
-                                <span>Translate Gerakan ke Teks & Audio</span>
-                            </a>
-                        </li>
-                        <li class="hero-nav-item">
-                            <a href="translate-teks.html">
-                                <div class="hero-nav-icon">🔊</div>
-                                <span>Translate Teks/Audio ke Gerakan</span>
-                            </a>
-                        </li>
-                        <li class="hero-nav-item">
-                            <a href="labillary.html">
-                                <div class="hero-nav-icon">📚</div>
-                                <span>Labillary</span>
-                            </a>
-                        </li>
-                        <li class="hero-nav-item">
-                            <a href="game.html">
-                                <div class="hero-nav-icon">🎮</div>
-                                <span>Quiz Interaktif</span>
-                            </a>
-                        </li>
-                        <li class="hero-nav-item">
-                            <a href="profil.html">
-                                <div class="hero-nav-icon">👤</div>
-                                <span>Profil</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                <h1>Platform Komunikasi Inklusif untuk Semua</h1>
+                <p>Memudahkan komunikasi antara penyandang disabilitas dan masyarakat umum melalui teknologi penerjemahan yang inovatif.</p>
             </div>
         </section>
 
-        <section class="features" id="features">
+        <section class="features">
             <div class="container">
                 <h2 class="section-title">Fitur Utama</h2>
                 <div class="features-container">
@@ -492,11 +344,9 @@
                 </div>
                 <div class="footer-section">
                     <h3>Link Cepat</h3>
-                    <p><a href="index.html">Home</a></p>
-                    <p><a href="translate-gerakan.html">Translate Gerakan</a></p>
-                    <p><a href="translate-teks.html">Translate Teks</a></p>
-                    <p><a href="labillary.html">Labillary</a></p>
-                    <p><a href="game.html">Game</a></p>
+                    <p><a href="#" style="color: white;">Home</a></p>
+                    <p><a href="#" style="color: white;">Fitur</a></p>
+                    <p><a href="#" style="color: white;">Game</a></p>
                 </div>
             </div>
             <div class="footer-bottom">

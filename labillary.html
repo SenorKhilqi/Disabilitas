@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labillary - Perpustakaan Digital Bahasa Isyarat - Diajar</title>
+    <style>
+        :root {
+            --primary-color: #c8a97e; /* Main cream color */
+            --secondary-color: #8c7051; /* Darker cream */
+            --accent-color: #e6d7b8; /* Light cream */
+            --text-color: #4a3c2a; /* Dark brown text */
+            --light-color: #f7f3e9; /* Very light cream background */
+            --dark-color: #3c3024; /* Very dark brown */
+            --white-color: #ffffff;
+            --gray-color: #e9e9e9;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+
+        /* Accessibility Improvements */
+        :focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 3px;
+        }
+
+        /* Skip to content link for keyboard users */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--secondary-color);
+            color: var(--white-color);
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header and Navigation */
+        .header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a:focus {
+            color: var(--secondary-color);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a:focus::after {
+            width: 100%;
+        }
+
+        /* Main content */
+        main {
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--accent-color) 100%);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Library Content */
+        .library-content {
+            padding: 4rem 0;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px 0 0 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color var(--transition-speed);
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .search-button {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .search-button:hover,
+        .search-button:focus {
+            background-color: var(--secondary-color);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+            transition: border-color var(--transition-speed);
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .category-tab:hover,
+        .category-tab:focus {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-tab.active {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* Library Gallery */
+        .library-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 180px;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .item-content {
+            padding: 1.5rem;
+        }
+
+        .item-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .item-description {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .page-button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .page-button:hover,
+        .page-button:focus {
+            background-color: var(--accent-color);
+        }
+
+        .page-button.active {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .featured-carousel {
+            overflow: hidden;
+            position: relative;
+            margin: 0 -0.75rem;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: calc(33.333% - 1.5rem);
+            margin: 0 0.75rem;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .carousel-button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .carousel-button:hover,
+        .carousel-button:focus {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* Dictionary Section */
+        .dictionary-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .alphabet-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .alphabet-tab {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .alphabet-tab:hover,
+        .alphabet-tab:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alphabet-tab.active {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .dictionary-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .dictionary-item {
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .dictionary-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* Resources Section */
+        .resources-section {
+            margin-bottom: 2rem;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-speed);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .resource-image {
+            width: 100%;
+            height: 150px;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .resource-content {
+            padding: 1.5rem;
+        }
+
+        .resource-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .resource-description {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white-color);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+        }
+
+        .resource-btn:hover,
+        .resource-btn:focus {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: var(--white-color);
+            margin: 10% auto;
+            padding: 2rem;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--secondary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .modal-body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-left {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .modal-right {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .sign-video {
+            width: 100%;
+            height: 250px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .sign-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .control-btn:hover,
+        .control-btn:focus {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .sign-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .sign-details h3 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            margin-right: 0.5rem;
+        }
+
+        .sign-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .sign-variations h3 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .variations-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .variation-item {
+            width: 100px;
+            height: 100px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .variation-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-footer {
+            text-align: center;
+        }
+
+        .footer-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white-color);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .footer-btn:hover,
+        .footer-btn:focus {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--white-color);
+                width: 100%;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                transition: left var(--transition-speed);
+                padding: 1rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .search-filter-section,
+            .featured-section,
+            .dictionary-section {
+                padding: 1rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                border-radius: 8px;
+                margin-bottom: 0.5rem;
+            }
+
+            .search-button {
+                border-radius: 8px;
+                padding: 0.75rem;
+            }
+
+            .alphabet-tabs,
+            .category-tabs {
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .carousel-item {
+                min-width: calc(100% - 1.5rem);
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 1rem;
+            }
+
+            .modal-body {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Langsung ke konten</a>
+    
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="Diajar homepage">Diajar</a>
+                <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span>&#9776;</span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="translate-gerakan.html">Translate Gerakan ke Teks & Audio</a></li>
+                    <li><a href="translate-teks.html">Translate Teks/Audio ke Gerakan</a></li>
+                    <li><a href="labillary.html" aria-current="page">Labillary</a></li>
+                    <li><a href="game.html">Game</a></li>
+                    <li><a href="profil.html">Profil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Labillary</h1>
+                <p class="page-description">Perpustakaan digital bahasa isyarat yang lengkap untuk belajar dan meningkatkan keterampilan komunikasi bahasa isyarat.</p>
+            </div>
+        </section>
+
+        <section class="library-content">
+            <div class="container">
+                <div class="search-filter-section">
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Cari gerakan isyarat, kata, atau frasa..." aria-label="Cari gerakan isyarat">
+                        <button class="search-button">Cari</button>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="language-filter" class="filter-label">Bahasa Isyarat</label>
+                            <select id="language-filter" class="filter-select">
+                                <option value="all">Semua Bahasa</option>
+                                <option value="sibi">SIBI</option>
+                                <option value="bisindo">BISINDO</option>
+                                <option value="asl">ASL</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="category-filter" class="filter-label">Kategori</label>
+                            <select id="category-filter" class="filter-select">
+                                <option value="all">Semua Kategori</option>
+                                <option value="daily">Komunikasi Sehari-hari</option>
+                                <option value="emergency">Darurat & Keselamatan</option>
+                                <option value="education">Pendidikan</option>
+                                <option value="medical">Medis & Kesehatan</option>
+                                <option value="work">Pekerjaan & Bisnis</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="difficulty-filter" class="filter-label">Tingkat Kesulitan</label>
+                            <select id="difficulty-filter" class="filter-select">
+                                <option value="all">Semua Tingkat</option>
+                                <option value="beginner">Pemula</option>
+                                <option value="intermediate">Menengah</option>
+                                <option value="advanced">Lanjutan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-section">
+                    <h2 class="section-title">Featured Signs</h2>
+                    <div class="featured-carousel">
+                        <div class="carousel-track">
+                            <div class="carousel-item">
+                                <div class="item-image">👋</div>
+                                <div class="item-content">
+                                    <h3 class="item-title">Halo / Salam</h3>
+                                    <p class="item-description">Gerakan sapaan dasar untuk memulai percakapan</p>
+                                    <div class="item-meta">
+                                        <span>SIBI & BISINDO</span>
+                                        <span>Pemula</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="item-image">❓</div>
+                                <div class="item-content">
+                                    <h3 class="item-title">Bagaimana / Apa</h3>
+                                    <p class="item-description">Gerakan untuk bertanya atau meminta informasi</p>
+                                    <div class="item-meta">
+                                        <span>SIBI</span>
+                                        <span>Pemula</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="item-image">🙏</div>
+                                <div class="item-content">
+                                    <h3 class="item-title">Terima Kasih</h3>
+                                    <p class="item-description">Gerakan untuk mengungkapkan rasa terima kasih</p>
+                                    <div class="item-meta">
+                                        <span>BISINDO</span>
+                                        <span>Pemula</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-controls">
+                        <button class="carousel-button" id="prev-button" aria-label="Previous slide">&#10094;</button>
+                        <button class="carousel-button" id="next-button" aria-label="Next slide">&#10095;</button>
+                    </div>
+                </div>
+
+                <div class="categories-section">
+                    <h2 class="section-title">Kategori Umum</h2>
+                    <div class="category-tabs">
+                        <button class="category-tab active" data-category="all">Semua</button>
+                        <button class="category-tab" data-category="daily">Komunikasi Sehari-hari</button>
+                        <button class="category-tab" data-category="emergency">Darurat & Keselamatan</button>
+                        <button class="category-tab" data-category="education">Pendidikan</button>
+                        <button class="category-tab" data-category="medical">Medis & Kesehatan</button>
+                        <button class="category-tab" data-category="work">Pekerjaan & Bisnis</button>
+                    </div>
+
+                    <div class="library-gallery" id="library-gallery">
+                        <!-- Gallery items will be dynamically generated -->
+                        <div class="gallery-item" data-category="daily">
+                            <div class="item-image">👋</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Halo / Salam</h3>
+                                <p class="item-description">Gerakan sapaan dasar untuk memulai percakapan</p>
+                                <div class="item-meta">
+                                    <span>SIBI & BISINDO</span>
+                                    <span>Pemula</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="daily">
+                            <div class="item-image">👍</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Baik / Ya</h3>
+                                <p class="item-description">Gerakan untuk menyatakan persetujuan atau kondisi baik</p>
+                                <div class="item-meta">
+                                    <span>BISINDO</span>
+                                    <span>Pemula</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="daily">
+                            <div class="item-image">🙋‍♂️</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Saya / Aku</h3>
+                                <p class="item-description">Gerakan untuk menunjuk diri sendiri</p>
+                                <div class="item-meta">
+                                    <span>SIBI</span>
+                                    <span>Pemula</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="education">
+                            <div class="item-image">📚</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Belajar</h3>
+                                <p class="item-description">Gerakan untuk mengekspresikan aktivitas belajar</p>
+                                <div class="item-meta">
+                                    <span>SIBI</span>
+                                    <span>Menengah</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="medical">
+                            <div class="item-image">🏥</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Rumah Sakit</h3>
+                                <p class="item-description">Gerakan untuk menunjukkan rumah sakit atau perawatan medis</p>
+                                <div class="item-meta">
+                                    <span>BISINDO</span>
+                                    <span>Menengah</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="emergency">
+                            <div class="item-image">🆘</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Tolong / Bantuan</h3>
+                                <p class="item-description">Gerakan penting untuk meminta bantuan dalam situasi darurat</p>
+                                <div class="item-meta">
+                                    <span>SIBI & BISINDO</span>
+                                    <span>Pemula</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="work">
+                            <div class="item-image">💼</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Kerja / Bisnis</h3>
+                                <p class="item-description">Gerakan untuk menunjukkan pekerjaan atau aktivitas bisnis</p>
+                                <div class="item-meta">
+                                    <span>SIBI</span>
+                                    <span>Menengah</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gallery-item" data-category="daily">
+                            <div class="item-image">🍽️</div>
+                            <div class="item-content">
+                                <h3 class="item-title">Makan</h3>
+                                <p class="item-description">Gerakan untuk mengekspresikan aktivitas makan</p>
+                                <div class="item-meta">
+                                    <span>BISINDO</span>
+                                    <span>Pemula</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pagination">
+                        <button class="page-button active">1</button>
+                        <button class="page-button">2</button>
+                        <button class="page-button">3</button>
+                        <button class="page-button">4</button>
+                        <button class="page-button">5</button>
+                    </div>
+                </div>
+
+                <div class="dictionary-section">
+                    <h2 class="section-title">Kamus Bahasa Isyarat</h2>
+                    <div class="alphabet-tabs">
+                        <button class="alphabet-tab active">A</button>
+                        <button class="alphabet-tab">B</button>
+                        <button class="alphabet-tab">C</button>
+                        <button class="alphabet-tab">D</button>
+                        <button class="alphabet-tab">E</button>
+                        <button class="alphabet-tab">F</button>
+                        <button class="alphabet-tab">G</button>
+                        <button class="alphabet-tab">H</button>
+                        <button class="alphabet-tab">I</button>
+                        <button class="alphabet-tab">J</button>
+                        <button class="alphabet-tab">K</button>
+                        <button class="alphabet-tab">L</button>
+                        <button class="alphabet-tab">M</button>
+                        <button class="alphabet-tab">N</button>
+                        <button class="alphabet-tab">O</button>
+                        <button class="alphabet-tab">P</button>
+                        <button class="alphabet-tab">Q</button>
+                        <button class="alphabet-tab">R</button>
+                        <button class="alphabet-tab">S</button>
+                        <button class="alphabet-tab">T</button>
+                        <button class="alphabet-tab">U</button>
+                        <button class="alphabet-tab">V</button>
+                        <button class="alphabet-tab">W</button>
+                        <button class="alphabet-tab">X</button>
+                        <button class="alphabet-tab">Y</button>
+                        <button class="alphabet-tab">Z</button>
+                    </div>
+
+                    <div class="dictionary-list">
+                        <div class="dictionary-item">Air</div>
+                        <div class="dictionary-item">Anak</div>
+                        <div class="dictionary-item">Api</div>
+                        <div class="dictionary-item">Ayah</div>
+                        <div class="dictionary-item">Apa</div>
+                        <div class="dictionary-item">Ajar</div>
+                        <div class="dictionary-item">Aman</div>
+                        <div class="dictionary-item">Ada</div>
+                        <div class="dictionary-item">Adik</div>
+                        <div class="dictionary-item">Antara</div>
+                        <div class="dictionary-item">Angkat</div>
+                        <div class="dictionary-item">Arah</div>
+                    </div>
+                </div>
+
+                <div class="resources-section">
+                    <h2 class="section-title">Sumber Belajar</h2>
+                    <div class="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-image">📚</div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Tutorial Dasar SIBI</h3>
+                                <p class="resource-description">Panduan video lengkap untuk mempelajari dasar-dasar SIBI untuk pemula.</p>
+                                <a href="#" class="resource-btn">Mulai Belajar</a>
+                            </div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-image">🎓</div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Kursus BISINDO</h3>
+                                <p class="resource-description">Kursus interaktif tingkat menengah untuk memperdalam kemampuan BISINDO.</p>
+                                <a href="#" class="resource-btn">Mulai Kursus</a>
+                            </div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-image">📱</div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Aplikasi Latihan</h3>
+                                <p class="resource-description">Download aplikasi latihan untuk meningkatkan keterampilan bahasa isyarat Anda.</p>
+                                <a href="#" class="resource-btn">Download</a>
+                            </div>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-image">👥</div>
+                            <div class="resource-content">
+                                <h3 class="resource-title">Komunitas Belajar</h3>
+                                <p class="resource-description">Bergabung dengan komunitas pembelajaran bahasa isyarat untuk latihan dan dukungan.</p>
+                                <a href="#" class="resource-btn">Gabung</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sign Detail Modal -->
+    <div class="modal" id="sign-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Halo / Salam</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-left">
+                    <div class="sign-video">
+                        👋
+                    </div>
+                    <div class="sign-controls">
+                        <button class="control-btn" aria-label="Play video">▶️</button>
+                        <button class="control-btn" aria-label="Pause video">⏸️</button>
+                        <button class="control-btn" aria-label="Replay video">🔄</button>
+                        <button class="control-btn" aria-label="Slow motion">⏱️</button>
+                    </div>
+                </div>
+                <div class="modal-right">
+                    <div class="sign-details">
+                        <h3>Detail</h3>
+                        <div class="detail-item">
+                            <span class="detail-label">Bahasa:</span>
+                            <span>SIBI & BISINDO</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Kategori:</span>
+                            <span>Komunikasi Sehari-hari</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Tingkat:</span>
+                            <span>Pemula</span>
+                        </div>
+                    </div>
+                    <div class="sign-description">
+                        <h3>Deskripsi</h3>
+                        <p>Gerakan ini merupakan gerakan sapaan dasar yang digunakan untuk memulai percakapan. Gerakan dilakukan dengan mengangkat telapak tangan kanan terbuka sejajar dengan bahu, lalu digerakkan ke kanan dan kiri sebanyak 2-3 kali.</p>
+                    </div>
+                    <div class="sign-variations">
+                        <h3>Variasi Regional</h3>
+                        <div class="variations-list">
+                            <div class="variation-item">👋</div>
+                            <div class="variation-item">👋</div>
+                            <div class="variation-item">👋</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="footer-btn">Latihan Gerakan Ini</button>
+                <button class="footer-btn">Simpan ke Koleksi</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Diajar</h3>
+                    <p>Platform komunikasi inklusif yang menjembatani kesenjangan komunikasi antara penyandang disabilitas dengan masyarakat umum.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: info@diajar.id</p>
+                    <p>Phone: (021) 1234-5678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="translate-gerakan.html">Translate Gerakan</a></p>
+                    <p><a href="translate-teks.html">Translate Teks</a></p>
+                    <p><a href="labillary.html">Labillary</a></p>
+                    <p><a href="game.html">Game</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Diajar. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle for mobile
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Sticky header effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Category filtering
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.getAttribute('data-category');
+                
+                // Remove active class from all tabs
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Filter gallery items
+                galleryItems.forEach(item => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Carousel functionality
+        const carouselTrack = document.querySelector('.carousel-track');
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        
+        let currentIndex = 0;
+        const itemWidth = carouselItems[0].getBoundingClientRect().width;
+        
+        function updateCarousel() {
+            carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+        }
+        
+        prevButton.addEventListener('click', () => {
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateCarousel();
+        });
+        
+        nextButton.addEventListener('click', () => {
+            currentIndex = Math.min(currentIndex + 1, carouselItems.length - 1);
+            updateCarousel();
+        });
+
+        // Alphabet tabs
+        const alphabetTabs = document.querySelectorAll('.alphabet-tab');
+        
+        alphabetTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                alphabetTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Here you would typically load words starting with the selected letter
+                // For demo, we're keeping it static
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('sign-modal');
+        const galleryItemsForModal = document.querySelectorAll('.gallery-item, .carousel-item');
+        const closeModal = document.getElementById('close-modal');
+        
+        galleryItemsForModal.forEach(item => {
+            item.addEventListener('click', () => {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        });
+        
+        // Close modal when clicking outside the content
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Pagination
+        const pageButtons = document.querySelectorAll('.page-button');
+        
+        pageButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                pageButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Here you would typically load content for the selected page
+                // For demo, we're keeping it static
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const searchButton = document.querySelector('.search-button');
+        
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            // Simple search implementation for demo
+            if (searchTerm) {
+                galleryItems.forEach(item => {
+                    const title = item.querySelector('.item-title').textContent.toLowerCase();
+                    const description = item.querySelector('.item-description').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Reset category tabs
+                categoryTabs.forEach(tab => tab.classList.remove('active'));
+                categoryTabs[0].classList.add('active');
+            }
+        });
+
+        // Allow search on Enter key
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

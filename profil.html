@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Diajar</title>
+    <style>
+        :root {
+            --primary-color: #c8a97e; /* Main cream color */
+            --secondary-color: #8c7051; /* Darker cream */
+            --accent-color: #e6d7b8; /* Light cream */
+            --text-color: #4a3c2a; /* Dark brown text */
+            --light-color: #f7f3e9; /* Very light cream background */
+            --dark-color: #3c3024; /* Very dark brown */
+            --white-color: #ffffff;
+            --gray-color: #e9e9e9;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+
+        /* Accessibility Improvements */
+        :focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 3px;
+        }
+
+        /* Skip to content link for keyboard users */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--secondary-color);
+            color: var(--white-color);
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header and Navigation */
+        .header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a:focus {
+            color: var(--secondary-color);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a:focus::after {
+            width: 100%;
+        }
+
+        /* Main content */
+        main {
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--accent-color) 100%);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Profile content */
+        .profile-content {
+            padding: 4rem 0;
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-sidebar {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-image span {
+            color: var(--secondary-color);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .profile-stats {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-navigation {
+            display: flex;
+            border-bottom: 2px solid var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            color: var(--text-color);
+            position: relative;
+        }
+
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .tab-button:hover,
+        .tab-button:focus {
+            color: var(--secondary-color);
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+        }
+
+        .tab-button.active::after {
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .progress-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-title {
+            font-weight: 500;
+        }
+
+        .progress-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--accent-color);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .achievement-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--secondary-color);
+        }
+
+        .achievement-title {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .achievement-date {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+        }
+
+        .history-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .history-description {
+            font-size: 0.9rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white-color);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover,
+        .btn-outline:focus {
+            background: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* Settings Form */
+        .settings-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color var(--transition-speed);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 16px 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--white-color);
+                width: 100%;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                transition: left var(--transition-speed);
+                padding: 1rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .profile-container {
+                gap: 1rem;
+            }
+
+            .profile-sidebar, 
+            .profile-section {
+                padding: 1rem;
+            }
+
+            .tab-navigation {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 0.5rem;
+            }
+
+            .tab-button {
+                padding: 0.75rem 1rem;
+            }
+            
+            .achievements-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+            
+            .achievement-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .achievement-title {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Langsung ke konten</a>
+    
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="Diajar homepage">Diajar</a>
+                <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span>&#9776;</span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="translate-gerakan.html">Translate Gerakan ke Teks & Audio</a></li>
+                    <li><a href="translate-teks.html">Translate Teks/Audio ke Gerakan</a></li>
+                    <li><a href="labillary.html">Labillary</a></li>
+                    <li><a href="game.html">Game</a></li>
+                    <li><a href="profil.html" aria-current="page">Profil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Profil Pengguna</h1>
+                <p class="page-description">Lihat kemajuan belajar dan kelola akun Anda.</p>
+            </div>
+        </section>
+
+        <section class="profile-content">
+            <div class="container">
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-image">
+                            <span>👤</span>
+                        </div>
+                        <h2 class="profile-name">Nama Pengguna</h2>
+                        <p class="profile-role">Pemula</p>
+
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Bergabung</span>
+                                <span class="stat-value">8 Mei 2025</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Kata Dikuasai</span>
+                                <span class="stat-value">32</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Latihan Selesai</span>
+                                <span class="stat-value">15</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Prestasi</span>
+                                <span class="stat-value">5</span>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <a href="#settings" class="btn btn-outline" id="edit-profile-btn">Edit Profil</a>
+                        </div>
+                    </div>
+
+                    <div class="profile-main">
+                        <div class="profile-section">
+                            <div class="tab-navigation">
+                                <button class="tab-button active" data-tab="progress">Kemajuan</button>
+                                <button class="tab-button" data-tab="achievements">Prestasi</button>
+                                <button class="tab-button" data-tab="history">Riwayat</button>
+                                <button class="tab-button" data-tab="settings">Pengaturan</button>
+                            </div>
+
+                            <div class="tab-content active" id="progress">
+                                <h3>Kemajuan Pembelajaran</h3>
+
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-title">Alfabet</span>
+                                        <span class="progress-value">70%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 70%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-title">Angka</span>
+                                        <span class="progress-value">85%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-title">Kata Umum</span>
+                                        <span class="progress-value">45%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 45%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-container">
+                                    <div class="progress-header">
+                                        <span class="progress-title">Frasa</span>
+                                        <span class="progress-value">30%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="achievements">
+                                <h3>Prestasi Anda</h3>
+                                
+                                <div class="achievements-grid">
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">🏆</div>
+                                        <div class="achievement-title">Quiz Master</div>
+                                        <div class="achievement-date">5 Mei 2025</div>
+                                    </div>
+
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">🔤</div>
+                                        <div class="achievement-title">Alfabet Pro</div>
+                                        <div class="achievement-date">2 Mei 2025</div>
+                                    </div>
+
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">🔢</div>
+                                        <div class="achievement-title">Angka Expert</div>
+                                        <div class="achievement-date">1 Mei 2025</div>
+                                    </div>
+
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">🎮</div>
+                                        <div class="achievement-title">Game Addict</div>
+                                        <div class="achievement-date">7 Mei 2025</div>
+                                    </div>
+
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">⏰</div>
+                                        <div class="achievement-title">Learner Weekly</div>
+                                        <div class="achievement-date">7 Mei 2025</div>
+                                    </div>
+
+                                    <div class="achievement-card achievement-locked">
+                                        <div class="achievement-icon">🔒</div>
+                                        <div class="achievement-title">Coming Soon</div>
+                                        <div class="achievement-date">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="history">
+                                <h3>Riwayat Aktivitas</h3>
+
+                                <div class="history-item">
+                                    <div class="history-date">8 Mei 2025, 14:30</div>
+                                    <div class="history-title">Selesai Quiz Alfabet</div>
+                                    <div class="history-description">Menyelesaikan quiz alfabet dengan skor 80%</div>
+                                </div>
+
+                                <div class="history-item">
+                                    <div class="history-date">7 Mei 2025, 10:15</div>
+                                    <div class="history-title">Latihan Kata Umum</div>
+                                    <div class="history-description">Mempelajari 5 kata baru dalam kategori Kata Umum</div>
+                                </div>
+
+                                <div class="history-item">
+                                    <div class="history-date">6 Mei 2025, 16:45</div>
+                                    <div class="history-title">Berlatih Translate Teks ke Gerakan</div>
+                                    <div class="history-description">Menerjemahkan 10 kalimat menjadi bahasa isyarat</div>
+                                </div>
+
+                                <div class="history-item">
+                                    <div class="history-date">5 Mei 2025, 09:20</div>
+                                    <div class="history-title">Berlatih Translate Gerakan ke Teks</div>
+                                    <div class="history-description">Menerjemahkan 8 gerakan isyarat menjadi teks</div>
+                                </div>
+
+                                <div class="history-item">
+                                    <div class="history-date">4 Mei 2025, 13:10</div>
+                                    <div class="history-title">Selesai Quiz Angka</div>
+                                    <div class="history-description">Menyelesaikan quiz angka dengan skor 90%</div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="settings">
+                                <h3>Pengaturan Akun</h3>
+
+                                <form class="settings-form">
+                                    <div class="form-group">
+                                        <label for="full-name" class="form-label">Nama Lengkap</label>
+                                        <input type="text" id="full-name" class="form-input" value="Nama Pengguna">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" id="email" class="form-input" value="user@example.com">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password" class="form-label">Password Baru</label>
+                                        <input type="password" id="password" class="form-input" placeholder="Biarkan kosong jika tidak ingin mengubah">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="confirm-password" class="form-label">Konfirmasi Password</label>
+                                        <input type="password" id="confirm-password" class="form-input" placeholder="Konfirmasi password baru">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="language" class="form-label">Bahasa</label>
+                                        <select id="language" class="form-select">
+                                            <option value="id" selected>Bahasa Indonesia</option>
+                                            <option value="en">English</option>
+                                            <option value="jw">Basa Jawa</option>
+                                            <option value="su">Basa Sunda</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="notifications" class="form-label">Notifikasi</label>
+                                        <select id="notifications" class="form-select">
+                                            <option value="all" selected>Semua</option>
+                                            <option value="important">Penting Saja</option>
+                                            <option value="none">Tidak Ada</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-outline" id="cancel-edit">Batal</button>
+                                        <button type="button" class="btn" id="save-settings">Simpan Perubahan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="profile-section">
+                            <h3 class="section-title">Rekomendasi Belajar</h3>
+                            <p>Berdasarkan kemajuan Anda saat ini, kami merekomendasikan:</p>
+                            <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                                <li>Melanjutkan pembelajaran Kata Umum untuk meningkatkan kemampuan.</li>
+                                <li>Mempraktikkan frasa-frasa dasar untuk meningkatkan kemahiran.</li>
+                                <li>Mencoba quiz "Kata Umum" untuk menguji pemahaman Anda.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Diajar</h3>
+                    <p>Platform komunikasi inklusif yang menjembatani kesenjangan komunikasi antara penyandang disabilitas dengan masyarakat umum.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: info@diajar.id</p>
+                    <p>Phone: (021) 1234-5678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="translate-gerakan.html">Translate Gerakan</a></p>
+                    <p><a href="translate-teks.html">Translate Teks</a></p>
+                    <p><a href="labillary.html">Labillary</a></p>
+                    <p><a href="game.html">Game</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Diajar. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle for mobile
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Sticky header effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Tab navigation
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and tabs
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(tab => tab.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding tab
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Edit profile button
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        
+        editProfileBtn.addEventListener('click', () => {
+            // Activate settings tab
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            document.querySelector('[data-tab="settings"]').classList.add('active');
+            document.getElementById('settings').classList.add('active');
+            
+            // Scroll to settings section
+            document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Settings form actions
+        const saveSettingsBtn = document.getElementById('save-settings');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        
+        saveSettingsBtn.addEventListener('click', () => {
+            // Here you would normally save the settings to the server
+            // For this demo, we'll just show an alert
+            alert('Perubahan profil telah disimpan!');
+            
+            // Update displayed name
+            const fullName = document.getElementById('full-name').value;
+            document.querySelector('.profile-name').textContent = fullName;
+            
+            // Switch back to progress tab
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            document.querySelector('[data-tab="progress"]').classList.add('active');
+            document.getElementById('progress').classList.add('active');
+        });
+        
+        cancelEditBtn.addEventListener('click', () => {
+            // Reset form values (in a real app, this would load the values from the server)
+            document.getElementById('full-name').value = 'Nama Pengguna';
+            document.getElementById('email').value = 'user@example.com';
+            document.getElementById('password').value = '';
+            document.getElementById('confirm-password').value = '';
+            
+            // Switch back to progress tab
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            document.querySelector('[data-tab="progress"]').classList.add('active');
+            document.getElementById('progress').classList.add('active');
+        });
+    </script>
+</body>
+</html>

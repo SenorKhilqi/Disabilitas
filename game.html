@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interaktif - Diajar</title>
+    <style>
+        :root {
+            --primary-color: #c8a97e; /* Main cream color */
+            --secondary-color: #8c7051; /* Darker cream */
+            --accent-color: #e6d7b8; /* Light cream */
+            --text-color: #4a3c2a; /* Dark brown text */
+            --light-color: #f7f3e9; /* Very light cream background */
+            --dark-color: #3c3024; /* Very dark brown */
+            --white-color: #ffffff;
+            --success-color: #6ba96f; /* Green for correct answers */
+            --error-color: #d15b5b; /* Red for wrong answers */
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+        }
+
+        /* Accessibility Improvements */
+        :focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 3px;
+        }
+
+        /* Skip to content link for keyboard users */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--secondary-color);
+            color: var(--white-color);
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header and Navigation */
+        .header {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all var(--transition-speed);
+        }
+
+        .header.scrolled {
+            padding: 0.5rem 0;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a:focus {
+            color: var(--secondary-color);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a:focus::after {
+            width: 100%;
+        }
+
+        /* Main content */
+        main {
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--light-color) 0%, var(--accent-color) 100%);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Game content */
+        .game-content {
+            padding: 4rem 0;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--white-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        /* Quiz Category Selection */
+        .quiz-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .category-card:hover,
+        .category-card:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Quiz Game */
+        .quiz-game {
+            display: none;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .quiz-progress {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .quiz-score {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .quiz-question {
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .question-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 576px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quiz-option {
+            background-color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            font-size: 1.1rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success-color);
+            background-color: var(--success-color);
+            color: var(--white-color);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--error-color);
+            background-color: var(--error-color);
+            color: var(--white-color);
+        }
+
+        .quiz-feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            background-color: rgba(107, 169, 111, 0.2);
+            color: var(--success-color);
+        }
+
+        .quiz-feedback.wrong {
+            background-color: rgba(209, 91, 91, 0.2);
+            color: var(--error-color);
+        }
+
+        .quiz-controls {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white-color);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .btn:hover,
+        .btn:focus {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quiz Results */
+        .quiz-results {
+            display: none;
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .results-score {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .results-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .results-summary {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            text-align: left;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .footer-section a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--white-color);
+                width: 100%;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                transition: left var(--transition-speed);
+                padding: 1rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .quiz-categories {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .category-card {
+                padding: 1rem;
+            }
+            
+            .category-icon {
+                font-size: 2rem;
+            }
+            
+            .category-title {
+                font-size: 1rem;
+            }
+
+            .game-container {
+                padding: 1rem;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .question-text {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Langsung ke konten</a>
+    
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo" aria-label="Diajar homepage">Diajar</a>
+                <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span>&#9776;</span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="translate-gerakan.html">Translate Gerakan ke Teks & Audio</a></li>
+                    <li><a href="translate-teks.html">Translate Teks/Audio ke Gerakan</a></li>
+                    <li><a href="labillary.html">Labillary</a></li>
+                    <li><a href="game.html" aria-current="page">Game</a></li>
+                    <li><a href="profil.html">Profil</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">Quiz Interaktif</h1>
+                <p class="page-description">Tingkatkan pemahaman Anda tentang bahasa isyarat melalui kuis interaktif yang menyenangkan!</p>
+            </div>
+        </section>
+
+        <section class="game-content">
+            <div class="container">
+                <div class="game-container">
+                    <!-- Category Selection Screen -->
+                    <div id="category-screen">
+                        <h2 class="section-title">Pilih Kategori Quiz</h2>
+                        <div class="quiz-categories">
+                            <div class="category-card" tabindex="0" data-category="alphabet">
+                                <div class="category-icon">🔤</div>
+                                <h3 class="category-title">Alfabet</h3>
+                            </div>
+                            <div class="category-card" tabindex="0" data-category="numbers">
+                                <div class="category-icon">🔢</div>
+                                <h3 class="category-title">Angka</h3>
+                            </div>
+                            <div class="category-card" tabindex="0" data-category="common">
+                                <div class="category-icon">🔠</div>
+                                <h3 class="category-title">Kata Umum</h3>
+                            </div>
+                            <div class="category-card" tabindex="0" data-category="phrases">
+                                <div class="category-icon">💬</div>
+                                <h3 class="category-title">Frasa</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Game Screen -->
+                    <div id="quiz-screen" class="quiz-game">
+                        <div class="quiz-header">
+                            <div class="quiz-progress">Pertanyaan <span id="current-question">1</span> dari <span id="total-questions">10</span></div>
+                            <div class="quiz-score">Skor: <span id="current-score">0</span></div>
+                        </div>
+
+                        <div class="quiz-question">
+                            <div class="question-image" id="question-image">A</div>
+                            <h3 class="question-text" id="question-text">Apa arti dari gerakan di atas?</h3>
+                        </div>
+
+                        <div class="quiz-options" id="quiz-options">
+                            <div class="quiz-option" data-option="a">Huruf A</div>
+                            <div class="quiz-option" data-option="b">Huruf B</div>
+                            <div class="quiz-option" data-option="c">Huruf C</div>
+                            <div class="quiz-option" data-option="d">Huruf D</div>
+                        </div>
+
+                        <div class="quiz-feedback" id="quiz-feedback"></div>
+
+                        <div class="quiz-controls">
+                            <button class="btn" id="next-question" disabled>Selanjutnya</button>
+                            <button class="btn" id="quit-quiz">Keluar</button>
+                        </div>
+                    </div>
+
+                    <!-- Results Screen -->
+                    <div id="results-screen" class="quiz-results">
+                        <h2 class="results-title">Hasil Quiz</h2>
+                        <div class="results-score"><span id="final-score">8</span>/10</div>
+                        <p class="results-message" id="results-message">Hebat! Anda telah menguasai dasar-dasar bahasa isyarat dengan baik.</p>
+                        
+                        <div class="results-summary">
+                            <h3>Ringkasan</h3>
+                            <div class="summary-item">
+                                <span>Jawaban Benar:</span>
+                                <span id="correct-answers">8</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Jawaban Salah:</span>
+                                <span id="wrong-answers">2</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Akurasi:</span>
+                                <span id="accuracy">80%</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-controls">
+                            <button class="btn" id="play-again">Main Lagi</button>
+                            <button class="btn" id="change-category">Ganti Kategori</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Diajar</h3>
+                    <p>Platform komunikasi inklusif yang menjembatani kesenjangan komunikasi antara penyandang disabilitas dengan masyarakat umum.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <p>Email: info@diajar.id</p>
+                    <p>Phone: (021) 1234-5678</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="translate-gerakan.html">Translate Gerakan</a></p>
+                    <p><a href="translate-teks.html">Translate Teks</a></p>
+                    <p><a href="labillary.html">Labillary</a></p>
+                    <p><a href="game.html">Game</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Diajar. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle for mobile
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !expanded);
+        });
+
+        // Sticky header effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Quiz Game Logic
+        const categoryScreen = document.getElementById('category-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const questionImage = document.getElementById('question-image');
+        const questionText = document.getElementById('question-text');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const currentQuestionEl = document.getElementById('current-question');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const currentScoreEl = document.getElementById('current-score');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const quitQuizBtn = document.getElementById('quit-quiz');
+        const finalScoreEl = document.getElementById('final-score');
+        const resultsMessageEl = document.getElementById('results-message');
+        const correctAnswersEl = document.getElementById('correct-answers');
+        const wrongAnswersEl = document.getElementById('wrong-answers');
+        const accuracyEl = document.getElementById('accuracy');
+        const playAgainBtn = document.getElementById('play-again');
+        const changeCategoryBtn = document.getElementById('change-category');
+
+        // Sample quiz data
+        const quizData = {
+            alphabet: [
+                {
+                    image: 'A',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Huruf A', 'Huruf B', 'Huruf C', 'Huruf D'],
+                    answer: 0
+                },
+                {
+                    image: 'B',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Huruf A', 'Huruf B', 'Huruf C', 'Huruf D'],
+                    answer: 1
+                },
+                {
+                    image: 'C',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Huruf A', 'Huruf B', 'Huruf C', 'Huruf D'],
+                    answer: 2
+                }
+            ],
+            numbers: [
+                {
+                    image: '1',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Angka 1', 'Angka 2', 'Angka 3', 'Angka 4'],
+                    answer: 0
+                },
+                {
+                    image: '2',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Angka 1', 'Angka 2', 'Angka 3', 'Angka 4'],
+                    answer: 1
+                }
+            ],
+            common: [
+                {
+                    image: '👋',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Halo', 'Selamat Tinggal', 'Terima Kasih', 'Maaf'],
+                    answer: 0
+                }
+            ],
+            phrases: [
+                {
+                    image: '❓',
+                    question: 'Apa arti dari gerakan di atas?',
+                    options: ['Apa Kabar?', 'Siapa Namamu?', 'Di mana kamu tinggal?', 'Berapa umurmu?'],
+                    answer: 0
+                }
+            ]
+        };
+
+        let currentCategory = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        // Start quiz when category is selected
+        categoryCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const category = card.getAttribute('data-category');
+                startQuiz(category);
+            });
+        });
+
+        // Start quiz with selected category
+        function startQuiz(category) {
+            currentCategory = category;
+            currentQuestions = quizData[category];
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            totalQuestionsEl.textContent = currentQuestions.length;
+            currentScoreEl.textContent = score;
+            
+            // Hide category screen and show quiz screen
+            categoryScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            resultsScreen.style.display = 'none';
+            
+            // Load first question
+            loadQuestion();
+        }
+
+        // Load current question
+        function loadQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            
+            currentQuestionEl.textContent = currentQuestionIndex + 1;
+            questionImage.textContent = question.image;
+            questionText.textContent = question.question;
+            
+            // Clear previous options
+            quizOptions.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('quiz-option');
+                optionEl.setAttribute('data-option', index);
+                optionEl.textContent = option;
+                
+                optionEl.addEventListener('click', () => selectOption(optionEl, index));
+                
+                quizOptions.appendChild(optionEl);
+            });
+            
+            // Reset feedback and next button
+            quizFeedback.style.display = 'none';
+            quizFeedback.textContent = '';
+            quizFeedback.className = 'quiz-feedback';
+            
+            nextQuestionBtn.disabled = true;
+            selectedOption = null;
+        }
+
+        // Handle option selection
+        function selectOption(optionEl, index) {
+            if (selectedOption !== null) return; // Prevent changing answer
+            
+            selectedOption = index;
+            const correctAnswer = currentQuestions[currentQuestionIndex].answer;
+            
+            // Remove any previous selections
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'wrong');
+            });
+            
+            // Mark selected option
+            optionEl.classList.add('selected');
+            
+            // Check if answer is correct
+            if (index === correctAnswer) {
+                optionEl.classList.add('correct');
+                score++;
+                currentScoreEl.textContent = score;
+                
+                quizFeedback.textContent = 'Benar! 🎉';
+                quizFeedback.classList.add('correct');
+            } else {
+                optionEl.classList.add('wrong');
+                
+                // Show correct answer
+                document.querySelector(`.quiz-option[data-option="${correctAnswer}"]`).classList.add('correct');
+                
+                quizFeedback.textContent = 'Salah! Jawaban yang benar telah ditandai.';
+                quizFeedback.classList.add('wrong');
+            }
+            
+            quizFeedback.style.display = 'block';
+            nextQuestionBtn.disabled = false;
+        }
+
+        // Handle next question button
+        nextQuestionBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // Quit quiz button
+        quitQuizBtn.addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin keluar dari quiz ini?')) {
+                categoryScreen.style.display = 'block';
+                quizScreen.style.display = 'none';
+                resultsScreen.style.display = 'none';
+            }
+        });
+
+        // Show results screen
+        function showResults() {
+            quizScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+            
+            const totalQuestions = currentQuestions.length;
+            const correctAnswers = score;
+            const wrongAnswers = totalQuestions - correctAnswers;
+            const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            finalScoreEl.textContent = correctAnswers;
+            correctAnswersEl.textContent = correctAnswers;
+            wrongAnswersEl.textContent = wrongAnswers;
+            accuracyEl.textContent = `${accuracy}%`;
+            
+            // Set result message based on score
+            if (accuracy >= 80) {
+                resultsMessageEl.textContent = 'Hebat! Anda telah menguasai dasar-dasar bahasa isyarat dengan baik.';
+            } else if (accuracy >= 50) {
+                resultsMessageEl.textContent = 'Bagus! Anda sudah cukup memahami bahasa isyarat. Teruslah berlatih!';
+            } else {
+                resultsMessageEl.textContent = 'Teruslah berlatih! Dengan latihan yang konsisten, Anda akan semakin mahir.';
+            }
+        }
+
+        // Play again button
+        playAgainBtn.addEventListener('click', () => {
+            startQuiz(currentCategory);
+        });
+
+        // Change category button
+        changeCategoryBtn.addEventListener('click', () => {
+            categoryScreen.style.display = 'block';
+            quizScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
